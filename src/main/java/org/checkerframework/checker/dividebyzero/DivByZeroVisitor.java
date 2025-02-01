@@ -6,7 +6,8 @@ import java.util.Set;
 
 import javax.lang.model.type.TypeKind;
 
-import org.checkerframework.checker.dividebyzero.qual.NotZero;
+import org.checkerframework.checker.dividebyzero.qual.Top;
+import org.checkerframework.checker.dividebyzero.qual.Zero;
 import org.checkerframework.common.basetype.BaseTypeChecker;
 import org.checkerframework.common.basetype.BaseTypeVisitor;
 
@@ -36,7 +37,7 @@ public class DivByZeroVisitor extends BaseTypeVisitor<DivByZeroAnnotatedTypeFact
     // A BinaryTree can represent any binary operator, including + or -.
     if (DIVISION_OPERATORS.contains(node.getKind())) {
       ExpressionTree divisor = node.getRightOperand();
-      if (isInt(divisor) && !hasAnnotation(divisor, NotZero.class)) {
+      if (isInt(divisor) && (hasAnnotation(divisor, Zero.class) || hasAnnotation(divisor, Top.class))) {
         return true;
       }
     }
@@ -55,7 +56,7 @@ public class DivByZeroVisitor extends BaseTypeVisitor<DivByZeroAnnotatedTypeFact
     // such as "x += 10".
     if (DIVISION_OPERATORS.contains(node.getKind())) {
       ExpressionTree divisor = node.getExpression();
-      if (isInt(divisor) && !hasAnnotation(divisor, NotZero.class)) {
+      if (isInt(divisor) && (hasAnnotation(divisor, Zero.class) || hasAnnotation(divisor, Top.class))) {
         return true;
       }
     }
